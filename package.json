@@ -1,0 +1,32 @@
+{
+  "name": "fininsight-website",
+  "version": "1.0.0",
+  "description": "AI-Powered Equity Research Platform - Professional Website",
+  "main": "index.html",
+  "scripts": {
+    "start": "python -m http.server 3000",
+    "dev": "python -m http.server 8000",
+    "build": "echo 'Static site - no build needed'",
+    "deploy:vercel": "vercel deploy --prod",
+    "deploy:netlify": "netlify deploy --prod"
+  },
+  "keywords": [
+    "equity research",
+    "financial analysis",
+    "AI",
+    "investment",
+    "stock analysis",
+    "fintech"
+  ],
+  "author": "FinInsight Team",
+  "license": "MIT",
+  "homepage": "https://fininsight.io",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/fininsight.git"
+  },
+  "devDependencies": {
+    "netlify-cli": "^latest",
+    "vercel": "^latest"
+  }
+}

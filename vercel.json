@@ -1,0 +1,7 @@
+{
+  "buildCommand": "echo 'Static site - no build required'",
+  "devCommand": "python -m http.server 3000",
+  "framework": "static",
+  "installCommand": "echo 'No dependencies to install'",
+  "public": "."
+}

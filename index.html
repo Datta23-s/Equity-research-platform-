@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinInsight - AI-Powered Equity Research</title>
+    <meta name="description" content="AI-powered equity research platform that analyzes financial reports in seconds. Get institutional-grade insights instantly.">
+    <meta name="theme-color" content="#0a2463">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #f8f9fa;
+            color: #6c757d;
+        }
+
+        :root {
+            --primary: #0a2463;
+            --secondary: #3e92cc;
+            --accent: #16c172;
+            --warning: #f4a261;
+            --danger: #e63946;
+            --neutral: #6c757d;
+            --bg-light: #f8f9fa;
+            --bg-white: #ffffff;
+        }
+
+        /* Glassmorphism Cards */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+        }
+
+        /* Smooth Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        .animate-fadeInUp {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        .animate-slideIn {
+            animation: slideIn 0.6s ease-out;
+        }
+
+        .animate-pulse-glow {
+            animation: pulse-glow 2s ease-in-out infinite;
+        }
+
+        /* Upload Zone */
+        .upload-zone {
+            border: 2px dashed var(--secondary);
+            border-radius: 12px;
+            padding: 40px;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            background: rgba(62, 146, 204, 0.03);
+        }
+
+        .upload-zone:hover {
+            background: rgba(62, 146, 204, 0.08);
+            border-color: var(--primary);
+        }
+
+        .upload-zone.drag-active {
+            background: rgba(62, 146, 204, 0.15);
+            border-color: var(--primary);
+        }
+
+        /* Progress Bar */
+        .progress-bar {
+            height: 6px;
+            background: #e9ecef;
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--secondary), var(--primary));
+            border-radius: 3px;
+            transition: width 0.3s ease;
+        }
+
+        /* Feature Cards */
+        .feature-card {
+            transition: all 0.3s ease;
+            border: 1px solid rgba(10, 36, 99, 0.1);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(10, 36, 99, 0.15);
+        }
+
+        /* Button Styles */
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            padding: 12px 28px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background: var(--secondary);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(62, 146, 204, 0.3);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--primary);
+            padding: 12px 28px;
+            border-radius: 8px;
+            border: 2px solid var(--primary);
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Tabs */
+        .tab-button {
+            padding: 12px 20px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+            color: var(--neutral);
+            font-weight: 500;
+        }
+
+        .tab-button.active {
+            border-bottom-color: var(--primary);
+            color: var(--primary);
+        }
+
+        /* Pricing Cards */
+        .pricing-card {
+            border: 2px solid rgba(10, 36, 99, 0.1);
+            border-radius: 12px;
+            padding: 30px;
+            transition: all 0.3s ease;
+        }
+
+        .pricing-card.featured {
+            border-color: var(--secondary);
+            transform: scale(1.05);
+            box-shadow: 0 20px 40px rgba(62, 146, 204, 0.2);
+        }
+
+        .pricing-card:hover {
+            box-shadow: 0 15px 35px rgba(10, 36, 99, 0.1);
+        }
+
+        /* Accordion */
+        .accordion-header {
+            cursor: pointer;
+            padding: 16px;
+            background: white;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .accordion-header:hover {
+            background: #f8f9fa;
+        }
+
+        .accordion-header.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .accordion-content.active {
+            max-height: 500px;
+            padding: 16px;
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-top: none;
+            margin-bottom: 8px;
+        }
+
+        /* Risk Matrix */
+        .risk-cell {
+            padding: 12px;
+            text-align: center;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 12px;
+        }
+
+        .risk-low { background: rgba(22, 193, 114, 0.2); color: var(--accent); }
+        .risk-medium { background: rgba(244, 162, 97, 0.2); color: var(--warning); }
+        .risk-high { background: rgba(230, 57, 70, 0.2); color: var(--danger); }
+
+        /* Recommendation Badge */
+        .recommendation {
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: 700;
+            display: inline-block;
+            margin-top: 16px;
+        }
+
+        .rec-buy {
+            background: rgba(22, 193, 114, 0.2);
+            color: var(--accent);
+        }
+
+        .rec-hold {
+            background: rgba(244, 162, 97, 0.2);
+            color: var(--warning);
+        }
+
+        .rec-sell {
+            background: rgba(230, 57, 70, 0.2);
+            color: var(--danger);
+        }
+
+        /* Loading Skeleton */
+        .skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: loading 2s infinite;
+            border-radius: 8px;
+        }
+
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        /* Sticky Header */
+        .sticky-header {
+            position: sticky;
+            top: 0;
+            background: white;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .pricing-card.featured {
+                transform: scale(1);
+            }
+
+            .upload-zone {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sticky Header -->
+    <header class="sticky-header">
+        <nav class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="text-2xl font-bold text-blue-900">FinInsight</div>
+            <button class="btn-primary text-sm">Sign In</button>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-50 pt-20 pb-16 px-6">
+        <div class="max-w-6xl mx-auto">
+            <div class="animate-fadeInUp">
+                <h1 class="text-5xl md:text-6xl font-bold text-blue-900 mb-6 leading-tight">
+                    AI-Powered Equity Research That Thinks Like an Analyst
+                </h1>
+                <p class="text-xl text-gray-700 mb-8 max-w-2xl">
+                    Upload financial reports. Get institutional-grade analysis in seconds.
+                </p>
+                
+                <div class="flex gap-4 mb-12 flex-wrap">
+                    <button class="btn-primary text-lg px-8 py-4">Analyze Report</button>
+                    <button class="btn-secondary text-lg px-8 py-4">Watch Demo (2 min)</button>
+                </div>
+
+                <!-- Trust Indicators -->
+                <div class="flex gap-8 flex-wrap text-gray-600 text-sm font-medium mb-16">
+                    <div>✓ Analyzing 10K+ reports monthly</div>
+                    <div>✓ Trusted by 500+ analysts</div>
+                    <div>✓ 98% accuracy rate</div>
+                </div>
+            </div>
+
+            <!-- Animated Background Chart (Placeholder) -->
+            <div class="animate-slideIn mt-12 glass-card p-8 h-64 relative overflow-hidden">
+                <div class="absolute inset-0 flex items-center justify-center">
+                    <div class="w-full h-full flex items-end justify-around px-8">
+                        <div class="bg-gradient-to-t from-blue-400 to-blue-200 w-12 h-32 rounded-t-lg opacity-50" style="animation: pulse 2s ease-in-out infinite;"></div>
+                        <div class="bg-gradient-to-t from-blue-400 to-blue-200 w-12 h-40 rounded-t-lg opacity-50" style="animation: pulse 2.2s ease-in-out infinite;"></div>
+                        <div class="bg-gradient-to-t from-blue-400 to-blue-200 w-12 h-36 rounded-t-lg opacity-50" style="animation: pulse 2.4s ease-in-out infinite;"></div>
+                        <div class="bg-gradient-to-t from-blue-400 to-blue-200 w-12 h-44 rounded-t-lg opacity-50" style="animation: pulse 2.6s ease-in-out infinite;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Demo Section -->
+    <section class="py-16 px-6 bg-white">
+        <div class="max-w-4xl mx-auto">
+            <h2 class="text-4xl font-bold text-blue-900 mb-12 text-center">Upload & Analyze in Real-Time</h2>
+            
+            <!-- File Upload Zone -->
+            <div class="upload-zone" id="uploadZone" style="animation: fadeInUp 0.6s ease-out;">
+                <div class="text-5xl mb-4">📁</div>
+                <p class="text-lg font-semibold text-blue-900 mb-2">Drag & drop your financial reports</p>
+                <p class="text-gray-600 mb-4">PDF, Excel, CSV, PNG/JPG charts accepted</p>
+                <button class="btn-primary">Browse Files</button>
+                <input type="file" id="fileInput" hidden accept=".pdf,.xlsx,.csv,.png,.jpg,.jpeg">
+            </div>
+
+            <!-- Processing Steps -->
+            <div class="mt-12 grid md:grid-cols-4 gap-4">
+                <div class="glass-card p-6 text-center">
+                    <div class="text-3xl mb-2">1️⃣</div>
+                    <h3 class="font-bold text-blue-900 mb-2">PDF Extraction</h3>
+                    <div class="progress-bar mb-3">
+                        <div class="progress-fill" style="width: 0%; transition: none;"></div>
+                    </div>
+                    <p class="text-sm text-gray-600">Processing document...</p>
+                </div>
+                <div class="glass-card p-6 text-center">
+                    <div class="text-3xl mb-2">2️⃣</div>
+                    <h3 class="font-bold text-blue-900 mb-2">Table Detection</h3>
+                    <div class="progress-bar mb-3">
+                        <div class="progress-fill" style="width: 0%; transition: none;"></div>
+                    </div>
+                    <p class="text-sm text-gray-600">Parsing tables...</p>
+                </div>
+                <div class="glass-card p-6 text-center">
+                    <div class="text-3xl mb-2">3️⃣</div>
+                    <h3 class="font-bold text-blue-900 mb-2">Chart Recognition</h3>
+                    <div class="progress-bar mb-3">
+                        <div class="progress-fill" style="width: 0%; transition: none;"></div>
+                    </div>
+                    <p class="text-sm text-gray-600">Extracting data...</p>
+                </div>
+                <div class="glass-card p-6 text-center">
+                    <div class="text-3xl mb-2">4️⃣</div>
+                    <h3 class="font-bold text-blue-900 mb-2">AI Analysis</h3>
+                    <div class="progress-bar mb-3">
+                        <div class="progress-fill" style="width: 0%; transition: none;"></div>
+                    </div>
+                    <p class="text-sm text-gray-600">Generating report...</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Capabilities Showcase -->
+    <section class="py-20 px-6 bg-blue-50">
+        <div class="max-w-6xl mx-auto">
+            <h2 class="text-4xl font-bold text-blue-900 mb-16 text-center">Why FinInsight Powers Professional Analysis</h2>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Column 1 -->
+                <div class="feature-card glass-card p-8 rounded-lg">
+                    <div class="text-4xl mb-4">📄</div>
+                    <h3 class="text-2xl font-bold text-blue-900 mb-4">Multimodal Document Processing</h3>
+                    <ul class="space-y-2 text-gray-700 mb-6">
+                        <li>✓ Extract from 10-K, 10-Q, earnings reports</li>
+                        <li>✓ Parse complex financial tables</li>
+                        <li>✓ OCR for scanned documents</li>
+                        <li>✓ Chart & graph data extraction</li>
+                    </ul>
+                    <p class="text-sm text-gray-600">PDF → Structured Data instantly</p>
+                </div>
+
+                <!-- Column 2 -->
+                <div class="feature-card glass-card p-8 rounded-lg">
+                    <div class="text-4xl mb-4">🧠</div>
+                    <h3 class="text-2xl font-bold text-blue-900 mb-4">AI-Driven Analysis</h3>
+                    <ul class="space-y-2 text-gray-700 mb-6">
+                        <li>✓ Fine-tuned on 15+ years of reports</li>
+                        <li>✓ Financial ratio calculation</li>
+                        <li>✓ Trend identification</li>
+                        <li>✓ Peer comparison analysis</li>
+                    </ul>
+                    <p class="text-sm text-gray-600">Data-driven insights automatically</p>
+                </div>
+
+                <!-- Column 3 -->
+                <div class="feature-card glass-card p-8 rounded-lg">
+                    <div class="text-4xl mb-4">🎯</div>
+                    <h3 class="text-2xl font-bold text-blue-900 mb-4">Actionable Intelligence</h3>
+                    <ul class="space-y-2 text-gray-700 mb-6">
+                        <li>✓ Executive summaries</li>
+                        <li>✓ Bull/bear scenarios</li>
+                        <li>✓ Risk assessment matrix</li>
+                        <li>✓ Price targets & recommendations</li>
+                    </ul>
+                    <p class="text-sm text-gray-600">Ready-to-act trading signals</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sample Output Section -->
+    <section class="py-20 px-6 bg-white">
+        <div class="max-w-6xl mx-auto">
+            <h2 class="text-4xl font-bold text-blue-900 mb-16 text-center">Traditional vs. AI-Powered Analysis</h2>
+            
+            <div class="grid md:grid-cols-2 gap-8 mb-12">
+                <!-- Traditional -->
+                <div class="glass-card p-8 rounded-lg border-2 border-red-200">
+                    <h3 class="text-xl font-bold text-gray-800 mb-6">📊 Traditional Analysis</h3>
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-3">
+                            <span class="text-red-500">⏱️</span>
+                            <div>
+                                <p class="font-semibold">8-12 hours needed</p>
+                                <p class="text-sm text-gray-600">Manual work</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <span class="text-red-500">📖</span>
+                            <div>
+                                <p class="font-semibold">Manual PDF reading</p>
+                                <p class="text-sm text-gray-600">Error-prone</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <span class="text-red-500">📈</span>
+                            <div>
+                                <p class="font-semibold">Excel modeling</p>
+                                <p class="text-sm text-gray-600">Time-consuming</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <span class="text-red-500">🤔</span>
+                            <div>
+                                <p class="font-semibold">Subjective interpretation</p>
+                                <p class="text-sm text-gray-600">Bias-prone</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- AI-Powered -->
+                <div class="glass-card p-8 rounded-lg border-2 border-green-200">
+                    <h3 class="text-xl font-bold text-gray-800 mb-6">🤖 Our AI Assistant</h3>
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-3">
+                            <span class="text-green-500">⚡</span>
+                            <div>
+                                <p class="font-semibold">3-5 minutes</p>
+                                <p class="text-sm text-gray-600">Instant results</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <span class="text-green-500">🔄</span>
+                            <div>
+                                <p class="font-semibold">Automated extraction</p>
+                                <p class="text-sm text-gray-600">100% accurate</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <span class="text-green-500">⚙️</span>
+                            <div>
+                                <p class="font-semibold">Instant calculations</p>
+                                <p class="text-sm text-gray-600">Precise metrics</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <span class="text-green-500">📊</span>
+                            <div>
+                                <p class="font-semibold">Data-driven insights</p>
+                                <p class="text-sm text-gray-600">Objective analysis</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sample Report Preview -->
+            <div class="glass-card p-8 rounded-lg">
+                <h3 class="text-2xl font-bold text-blue-900 mb-6">Sample Analysis Report: Apple Inc. (AAPL)</h3>
+                
+                <!-- Key Metrics -->
+                <div class="grid md:grid-cols-4 gap-4 mb-8">
+                    <div class="bg-gradient-to-br from-blue-50 to-blue-100 p-4 rounded-lg">
+                        <p class="text-gray-600 text-sm">Revenue Growth</p>
+                        <p class="text-3xl font-bold text-blue-900">12.5%</p>
+                        <p class="text-xs text-green-600 mt-1">↑ YoY</p>
+                    </div>
+                    <div class="bg-gradient-to-br from-blue-50 to-blue-100 p-4 rounded-lg">
+                        <p class="text-gray-600 text-sm">EPS</p>
+                        <p class="text-3xl font-bold text-blue-900">$6.05</p>
+                        <p class="text-xs text-green-600 mt-1">↑ 18.2%</p>
+                    </div>
+                    <div class="bg-gradient-to-br from-blue-50 to-blue-100 p-4 rounded-lg">
+                        <p class="text-gray-600 text-sm">Profit Margin</p>
+                        <p class="text-3xl font-bold text-blue-900">28.3%</p>
+                        <p class="text-xs text-green-600 mt-1">Excellent</p>
+                    </div>
+                    <div class="bg-gradient-to-br from-blue-50 to-blue-100 p-4 rounded-lg">
+                        <p class="text-gray-600 text-sm">Debt/Equity</p>
+                        <p class="text-3xl font-bold text-blue-900">0.85</p>
+                        <p class="text-xs text-green-600 mt-1">Healthy</p>
+                    </div>
+                </div>
+
+                <!-- Risk Heat Map -->
+                <h4 class="font-bold text-blue-900 mb-4">Risk Assessment Matrix</h4>
+                <div class="grid grid-cols-5 gap-2 mb-8">
+                    <div class="risk-cell risk-low">Regulatory</div>
+                    <div class="risk-cell risk-low">Supply Chain</div>
+                    <div class="risk-cell risk-medium">Competition</div>
+                    <div class="risk-cell risk-low">Currency</div>
+                    <div class="risk-cell risk-low">Tech</div>
+                </div>
+
+                <!-- Recommendation -->
+                <div class="border-t pt-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-600 mb-2">Recommendation</p>
+                            <div class="recommendation rec-buy">
+                                BUY • Confidence: 78%
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-gray-600 mb-2">Price Target (12 months)</p>
+                            <p class="text-3xl font-bold text-green-600">$195</p>
+                            <p class="text-xs text-gray-600 mt-1">vs Current: $175</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Use Cases (Tabbed) -->
+    <section class="py-20 px-6 bg-blue-50">
+        <div class="max-w-4xl mx-auto">
+            <h2 class="text-4xl font-bold text-blue-900 mb-12 text-center">Who Uses FinInsight?</h2>
+            
+            <!-- Tab Buttons -->
+            <div class="flex border-b border-gray-300 mb-8 overflow-x-auto">
+                <button class="tab-button active" onclick="switchTab(0)">Buy-Side Analysts</button>
+                <button class="tab-button" onclick="switchTab(1)">Portfolio Managers</button>
+                <button class="tab-button" onclick="switchTab(2)">Retail Investors</button>
+                <button class="tab-button" onclick="switchTab(3)">Financial Advisors</button>
+            </div>
+
+            <!-- Tab Contents -->
+            <div id="tab0" class="tab-content">
+                <div class="glass-card p-8 rounded-lg">
+                    <h3 class="text-2xl font-bold text-blue-900 mb-4">📊 Buy-Side Analysts</h3>
+                    <p class="text-gray-700 mb-4"><strong>Scenario:</strong> Screening 50+ stocks quarterly</p>
+                    <p class="text-gray-700 mb-4"><strong>Solution:</strong> Batch upload, comparative analysis</p>
+                    <div class="bg-gradient-to-r from-green-50 to-green-100 p-4 rounded-lg">
+                        <p class="text-green-900"><strong>Outcome:</strong> 80% time savings, deeper coverage</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="tab1" class="tab-content hidden">
+                <div class="glass-card p-8 rounded-lg">
+                    <h3 class="text-2xl font-bold text-blue-900 mb-4">📈 Portfolio Managers</h3>
+                    <p class="text-gray-700 mb-4"><strong>Scenario:</strong> Daily position monitoring</p>
+                    <p class="text-gray-700 mb-4"><strong>Solution:</strong> Alert-based re-analysis on new filings</p>
+                    <div class="bg-gradient-to-r from-green-50 to-green-100 p-4 rounded-lg">
+                        <p class="text-green-900"><strong>Outcome:</strong> Faster reaction to material events</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="tab2" class="tab-content hidden">
+                <div class="glass-card p-8 rounded-lg">
+                    <h3 class="text-2xl font-bold text-blue-900 mb-4">👤 Retail Investors</h3>
+                    <p class="text-gray-700 mb-4"><strong>Scenario:</strong> Research before investment decisions</p>
+                    <p class="text-gray-700 mb-4"><strong>Solution:</strong> Simplified reports with tooltips</p>
+                    <div class="bg-gradient-to-r from-green-50 to-green-100 p-4 rounded-lg">
+                        <p class="text-green-900"><strong>Outcome:</strong> Confident, informed investing</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="tab3" class="tab-content hidden">
+                <div class="glass-card p-8 rounded-lg">
+                    <h3 class="text-2xl font-bold text-blue-900 mb-4">💼 Financial Advisors</h3>
+                    <p class="text-gray-700 mb-4"><strong>Scenario:</strong> Client presentation preparation</p>
+                    <p class="text-gray-700 mb-4"><strong>Solution:</strong> White-label reports, custom branding</p>
+                    <div class="bg-gradient-to-r from-green-50 to-green-100 p-4 rounded-lg">
+                        <p class="text-green-900"><strong>Outcome:</strong> Professional client deliverables</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section class="py-20 px-6 bg-white">
+        <div class="max-w-6xl mx-auto">
+            <h2 class="text-4xl font-bold text-blue-900 mb-4 text-center">Pricing Plans</h2>
+            <p class="text-center text-gray-600 mb-16">Choose the perfect plan for your analysis needs</p>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Starter -->
+                <div class="pricing-card">
+                    <h3 class="text-2xl font-bold text-blue-900 mb-2">Starter</h3>
+                    <p class="text-gray-600 mb-6">Perfect to get started</p>
+                    <p class="text-4xl font-bold text-blue-900 mb-6">Free</p>
+                    <ul class="space-y-3 mb-8 text-gray-700">
+                        <li>✓ 5 reports/month</li>
+                        <li>✓ Basic analysis</li>
+                        <li>✓ Standard processing</li>
+                        <li>✗ Priority support</li>
+                        <li>✗ Excel export</li>
+                    </ul>
+                    <button class="btn-secondary w-full">Start Free</button>
+                </div>
+
+                <!-- Analyst (Featured) -->
+                <div class="pricing-card featured">
+                    <div class="bg-gradient-to-r from-blue-900 to-blue-700 text-white px-4 py-2 rounded-full text-sm font-bold mb-4 inline-block">MOST POPULAR</div>
+                    <h3 class="text-2xl font-bold text-blue-900 mb-2">Analyst</h3>
+                    <p class="text-gray-600 mb-6">For serious researchers</p>
+                    <p class="text-4xl font-bold text-blue-900 mb-2">$49<span class="text-lg">/mo</span></p>
+                    <p class="text-gray-600 mb-6">Billed monthly</p>
+                    <ul class="space-y-3 mb-8 text-gray-700">
+                        <li>✓ 50 reports/month</li>
+                        <li>✓ Advanced analysis</li>
+                        <li>✓ Priority processing</li>
+                        <li>✓ Email support</li>
+                        <li>✓ Excel export</li>
+                    </ul>
+                    <button class="btn-primary w-full">Upgrade to Pro</button>
+                </div>
+
+                <!-- Institution -->
+                <div class="pricing-card">
+                    <h3 class="text-2xl font-bold text-blue-900 mb-2">Institution</h3>
+                    <p class="text-gray-600 mb-6">Enterprise solution</p>
+                    <p class="text-4xl font-bold text-blue-900 mb-6">Custom</p>
+                    <ul class="space-y-3 mb-8 text-gray-700">
+                        <li>✓ Unlimited reports</li>
+                        <li>✓ API access</li>
+                        <li>✓ Custom fine-tuning</li>
+                        <li>✓ Dedicated manager</li>
+                        <li>✓ White-label</li>
+                    </ul>
+                    <button class="btn-secondary w-full">Contact Sales</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Trust & Security -->
+    <section class="py-16 px-6 bg-gradient-to-r from-blue-900 to-blue-800 text-white">
+        <div class="max-w-4xl mx-auto">
+            <h2 class="text-4xl font-bold mb-12 text-center">Enterprise-Grade Security</h2>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div>
+                    <p class="text-lg mb-4">✓ <strong>SOC 2 Type II Certified</strong></p>
+                    <p class="text-lg mb-4">✓ <strong>AES-256 Encryption</strong> - Bank-level protection</p>
+                    <p class="text-lg mb-4">✓ <strong>30-day Data Retention</strong> - Configurable</p>
+                </div>
+                <div>
+                    <p class="text-lg mb-4">✓ <strong>No Model Training</strong> on your data without consent</p>
+                    <p class="text-lg mb-4">✓ <strong>GDPR & CCPA Compliant</strong></p>
+                    <p class="text-lg mb-4">✓ <strong>Regular Audits</strong> by third parties</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="py-20 px-6 bg-white">
+        <div class="max-w-4xl mx-auto">
+            <h2 class="text-4xl font-bold text-blue-900 mb-12 text-center">Frequently Asked Questions</h2>
+            
+            <div class="space-y-2">
+                <!-- FAQ 1 -->
+                <div>
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <span>How accurate are the recommendations?</span>
+                        <span>+</span>
+                    </div>
+                    <div class="accordion-content">
+                        <p>Our model achieves 78% average accuracy on historical backtests across sectors. Recommendations are confidence-scored, with higher scores indicating stronger conviction. We also provide detailed rationale so you can make informed decisions.</p>
+                    </div>
+                </div>
+
+                <!-- FAQ 2 -->
+                <div>
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <span>What file formats do you support?</span>
+                        <span>+</span>
+                    </div>
+                    <div class="accordion-content">
+                        <p>We support PDF, Excel (.xlsx, .xls), CSV files, and images (PNG, JPG) of charts. We can handle scanned documents with OCR technology. For 10-Ks and 10-Qs, we can parse even complex footnotes and supplementary materials.</p>
+                    </div>
+                </div>
+
+                <!-- FAQ 3 -->
+                <div>
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <span>Can I integrate this with my existing workflow?</span>
+                        <span>+</span>
+                    </div>
+                    <div class="accordion-content">
+                        <p>Yes! Our Pro and Institution plans include API access. You can programmatically upload reports, retrieve analyses, and integrate results into your systems. We provide webhooks for async processing notifications.</p>
+                    </div>
+                </div>
+
+                <!-- FAQ 4 -->
+                <div>
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <span>How do you handle non-English documents?</span>
+                        <span>+</span>
+                    </div>
+                    <div class="accordion-content">
+                        <p>Our model supports 40+ languages including Chinese, Japanese, and European languages. Analysis is automatically translated to English. For non-English inputs, we maintain regional financial context and conventions.</p>
+                    </div>
+                </div>
+
+                <!-- FAQ 5 -->
+                <div>
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <span>What's your data source for market comparisons?</span>
+                        <span>+</span>
+                    </div>
+                    <div class="accordion-content">
+                        <p>We aggregate data from SEC EDGAR, Bloomberg, Reuters, and FactSet. Peer comparisons use industry-classified peers from Refinitiv. All data is real-time and updated daily at market close.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-blue-900 text-white py-12 px-6">
+        <div class="max-w-6xl mx-auto">
+            <div class="grid md:grid-cols-5 gap-8 mb-8">
+                <div>
+                    <h4 class="font-bold mb-4">Product</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#" class="hover:text-blue-300">Features</a></li>
+                        <li><a href="#" class="hover:text-blue-300">Pricing</a></li>
+                        <li><a href="#" class="hover:text-blue-300">API Docs</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">Company</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#" class="hover:text-blue-300">About</a></li>
+                        <li><a href="#" class="hover:text-blue-300">Careers</a></li>
+                        <li><a href="#" class="hover:text-blue-300">Blog</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">Resources</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#" class="hover:text-blue-300">Help Center</a></li>
+                        <li><a href="#" class="hover:text-blue-300">Webinars</a></li>
+                        <li><a href="#" class="hover:text-blue-300">Sample Reports</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">Legal</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#" class="hover:text-blue-300">Privacy</a></li>
+                        <li><a href="#" class="hover:text-blue-300">Terms</a></li>
+                        <li><a href="#" class="hover:text-blue-300">Security</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-bold mb-4">Follow</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#" class="hover:text-blue-300">Twitter</a></li>
+                        <li><a href="#" class="hover:text-blue-300">LinkedIn</a></li>
+                        <li><a href="#" class="hover:text-blue-300">GitHub</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-blue-800 pt-8 text-sm text-gray-300">
+                <p class="mb-4">As featured in: WSJ • Bloomberg • TechCrunch • VentureBeat</p>
+                <p>&copy; 2026 FinInsight. AI-Powered Equity Research Platform. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Exit-Intent Popup -->
+    <div id="exitPopup" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50 px-4">
+        <div class="glass-card p-8 rounded-lg max-w-md w-full animate-fadeInUp">
+            <button onclick="closeExitPopup()" class="float-right text-gray-600 hover:text-gray-900">✕</button>
+            <h3 class="text-2xl font-bold text-blue-900 mb-4">Wait! 👋</h3>
+            <p class="text-gray-700 mb-6">Try 1 free analysis before you go. No credit card needed.</p>
+            <button class="btn-primary w-full mb-3">Analyze a Report</button>
+            <button onclick="closeExitPopup()" class="btn-secondary w-full">Maybe Later</button>
+        </div>
+    </div>
+
+    <script>
+        // Tab switching
+        function switchTab(index) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tab-button').forEach(el => el.classList.remove('active'));
+            
+            document.getElementById(`tab${index}`).classList.remove('hidden');
+            document.querySelectorAll('.tab-button')[index].classList.add('active');
+        }
+
+        // Accordion toggle
+        function toggleAccordion(header) {
+            const content = header.nextElementSibling;
+            const isActive = content.classList.contains('active');
+            
+            document.querySelectorAll('.accordion-content').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.accordion-header').forEach(el => el.classList.remove('active'));
+            
+            if (!isActive) {
+                content.classList.add('active');
+                header.classList.add('active');
+                header.lastElementChild.textContent = '−';
+            } else {
+                header.lastElementChild.textContent = '+';
+            }
+        }
+
+        // Exit intent popup
+        let exitPopupShown = false;
+        document.addEventListener('mouseout', (e) => {
+            if (e.clientY < 0 && !exitPopupShown) {
+                document.getElementById('exitPopup').classList.remove('hidden');
+                exitPopupShown = true;
+            }
+        });
+
+        function closeExitPopup() {
+            document.getElementById('exitPopup').classList.add('hidden');
+        }
+
+        // File upload handling
+        const uploadZone = document.getElementById('uploadZone');
+        const fileInput = document.getElementById('fileInput');
+
+        uploadZone.addEventListener('click', () => fileInput.click());
+        
+        uploadZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadZone.classList.add('drag-active');
+        });
+
+        uploadZone.addEventListener('dragleave', () => {
+            uploadZone.classList.remove('drag-active');
+        });
+
+        uploadZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadZone.classList.remove('drag-active');
+            const files = e.dataTransfer.files;
+            handleFiles(files);
+        });
+
+        fileInput.addEventListener('change', (e) => {
+            handleFiles(e.target.files);
+        });
+
+        function handleFiles(files) {
+            if (files.length > 0) {
+                const progressFills = document.querySelectorAll('.progress-fill');
+                let currentStep = 0;
+
+                progressFills.forEach((fill, index) => {
+                    setTimeout(() => {
+                        const interval = setInterval(() => {
+                            const current = parseFloat(fill.style.width) || 0;
+                            if (current < 100) {
+                                fill.style.width = (current + Math.random() * 30) + '%';
+                            } else {
+                                clearInterval(interval);
+                            }
+                        }, 200);
+                    }, index * 800);
+                });
+
+                alert(`File "${files[0].name}" would be uploaded. In a real app, this triggers the analysis pipeline.`);
+            }
+        }
+
+        // Scroll animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animation = 'fadeInUp 0.6s ease-out forwards';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.feature-card, .pricing-card').forEach(el => {
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,21 @@
+User-agent: *
+Allow: /
+
+# Block crawling of specific paths (optional)
+# Disallow: /admin/
+# Disallow: /private/
+
+# Crawl delay (milliseconds between requests)
+Crawl-delay: 1
+
+# Specific search engines
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 0
+
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+# Sitemap location
+Sitemap: https://fininsight.io/sitemap.xml
